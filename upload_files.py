@@ -15,6 +15,14 @@ for folder in UPLOAD_FOLDER.values():
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+
+def global_search_by_filename(filename):
+    for folder in UPLOAD_FOLDER.values():
+        filepath = os.path.join(folder, filename)
+        if os.path.exists(filepath):
+            return filepath
+    return None
+
 def allowed_file(filename, allowed_extensions):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
@@ -52,6 +60,26 @@ def upload_file():
     except ValueError as e:
         if str(e) == "Unsupported media type.":
             return jsonify({'error': str(e)}), 415
+        return jsonify({'error': str(e)}), 400
+
+
+@app.route('/files', methods=["GET"])
+def get_files_by_filename():
+    try:
+        if 'filename' not in request.args:
+            raise ValueError('No filename provided.')
+
+        filename = request.args['filename']
+        filepath = global_search_by_filename(filename)
+
+        if filepath:
+            return jsonify({'path': filepath}), 200
+        else:
+            raise ValueError('File not found.')
+
+    except ValueError as e:
+        if str(e) == "File not found":
+            return jsonify({'error': str(e)}), 404
         return jsonify({'error': str(e)}), 400
 
 if __name__ == '__main__':
