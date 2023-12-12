@@ -33,13 +33,16 @@ def upload_file():
         'docs': {'docx'}
     }
 
-    if file_type not in UPLOAD_FOLDER or not allowed_file(file.filename, allowed_extensions[file_type]):
-        return jsonify({'error': 'Invalid file type or extension.'}), 400
+    if file_type not in UPLOAD_FOLDER:
+        return jsonify({'error': 'Invalid file type.'}), 400
+
+    if not allowed_file(file.filename, allowed_extensions[file_type]):
+        return jsonify({'error': 'Unsupported media type. '}), 415
 
     filepath = os.path.join(app.config['UPLOAD_FOLDER'][file_type], file.filename)
 
     if os.path.exists(filepath):
-        return jsonify({'error': 'filename should be unique.'}), 400
+        return jsonify({'error': 'Filename should be unique.'}), 400
 
     file.save(filepath)
 
