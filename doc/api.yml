@@ -1,0 +1,193 @@
+openapi: 3.0.3
+info:
+  version: 'latest'
+  title: 'File upload API'
+
+servers:
+  - url: 'http://localhost:8080'
+
+paths:
+  '/file':
+    post:
+      tags:
+        - Files
+      summary: Upload a file to the cloud
+      operationId: UploadFile
+      requestBody:
+        content:
+          multipart/form-date:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/uploadFile'
+      consumes:
+        - multipart/form-data
+      responses:
+        '200':
+          description: Operation successfully done
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/uploadedFile'
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+        '507':
+          $ref: '#/components/responses/507'
+
+components:
+  responses:
+    400:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadRequestException'
+    500:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InternalServerErrorException'
+    501:
+      description: Not Implemented
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotImplementedException'
+    507:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InsufficientStorage'
+  schemas:
+    ApiException:
+      type: object
+      properties:
+        type:
+          type: string
+        message:
+          type: string
+    NotImplementedException:
+      allOf:
+        - $ref: '#/components/schemas/ApiException'
+      example:
+        type: NotImplementedException
+        message: Service not implemented
+    FileNotFoundException:
+      allOf:
+        - $ref: '#/components/schemas/ApiException'
+      example:
+        type: FileNotFoundException
+        message: The specified file is not found.
+    BadFileTypeException:
+      allOf:
+        - $ref: '#/components/schemas/ApiException'
+      example:
+        type: BadFileTypeException
+        message: File type not supported
+    FileNameInvalid:
+      allOf:
+        - $ref: '#/components/schemas/ApiException'
+      example:
+        type: FileNameInvalidException
+        message: File name is invalid
+    SensitiveFile:
+      allOf:
+        - $ref: '#/components/schemas/ApiException'
+      example:
+        type: SensitiveFileException
+        message: File contains sensitive data
+    BadRequestException:
+      oneOf:
+        - $ref: '#/components/schemas/BadFileTypeException'
+        - $ref: '#/components/schemas/SensitiveFile'
+        - $ref: '#/components/schemas/FileNameInvalid'
+    ServerError:
+      allOf:
+        - $ref: '#/components/schemas/ApiException'
+      example:
+        type: ServerErrorException
+        message: Internal Server Error
+    CorruptedFile:
+      allOf:
+        - $ref: '#/components/schemas/ApiException'
+      example:
+        type: CorruptedFileException
+        message: The given file is corrupted
+    InternalServerErrorException:
+      oneOf:
+        - $ref: '#/components/schemas/ServerError'
+        - $ref: '#/components/schemas/CorruptedFile'
+    InsufficientStorage:
+      allOf:
+        - $ref: '#/components/schemas/ApiException'
+      example:
+        type: InsufficientStorageException
+        message: Insufficient Storage on target
+    uploadedFile:
+      type: object
+      properties:
+        folder:
+          type: string
+        filename:
+          type: string
+    pdfFileType:
+      type: string
+      format: binary
+      contentMediaType: application/pdf
+    pngFileType:
+      type: string
+      format: binary
+      contentMediaType: image/png
+    jpegFileType:
+      type: string
+      format: binary
+      contentMediaType: image/jpeg
+    mp4FileType:
+      type: string
+      format: binary
+      contentMediaType: video/mp4
+    movFileType:
+      type: string
+      format: binary
+      contentMediaType: video/quicktime
+    aviFileType:
+      type: string
+      format: binary
+      contentMediaType: video/x-msvideo
+    mkvFileType:
+      type: string
+      format: binary
+      contentMediaType: video/x-matroska
+    docxFileType:
+      type: string
+      format: binary
+      contentMediaType: application/vnd.openxmlformats-officedocument.wordprocessingml.document
+    xlsxFileType:
+      type: string
+      format: binary
+      contentMediaType: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+    csvFileType:
+      type: string
+      format: binary
+      contentMediaType: text/csv
+    uploadFile:
+      type: object
+      properties:
+        file:
+          oneOf:
+            - $ref: '#/components/schemas/pdfFileType'
+            - $ref: '#/components/schemas/pngFileType'
+            - $ref: '#/components/schemas/jpegFileType'
+            - $ref: '#/components/schemas/mp4FileType'
+            - $ref: '#/components/schemas/movFileType'
+            - $ref: '#/components/schemas/aviFileType'
+            - $ref: '#/components/schemas/mkvFileType'
+            - $ref: '#/components/schemas/docxFileType'
+            - $ref: '#/components/schemas/xlsxFileType'
+            - $ref: '#/components/schemas/csvFileType'
