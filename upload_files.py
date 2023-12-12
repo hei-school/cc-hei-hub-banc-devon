@@ -37,6 +37,10 @@ def upload_file():
         return jsonify({'error': 'Invalid file type or extension.'}), 400
 
     filepath = os.path.join(app.config['UPLOAD_FOLDER'][file_type], file.filename)
+
+    if os.path.exists(filepath):
+        return jsonify({'error': 'filename should be unique.'}), 400
+
     file.save(filepath)
 
     return jsonify({'success': f'{file_type} uploaded.'}), 200
