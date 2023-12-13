@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import school.hei.cloud.endpoint.rest.exception.Exception;
 import school.hei.cloud.model.exception.ApiException;
 import school.hei.cloud.model.exception.BadFileTypeException;
+import school.hei.cloud.model.exception.BadFolderNameException;
+import school.hei.cloud.model.exception.InvalidFileException;
 
 @RestControllerAdvice
 @Slf4j
@@ -17,6 +19,19 @@ public class InternalToRestExceptionHandler {
     log.info("Bad file type", e);
     return new ResponseEntity<>(toRest(e, HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
   }
+
+  @ExceptionHandler(value = {InvalidFileException.class})
+  ResponseEntity<Exception> handleInvalidFileException(InvalidFileException e){
+    log.info("Bad folder name", e);
+    return new ResponseEntity<>(toRest(e, HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(value = {BadFolderNameException.class})
+  ResponseEntity<Exception> BadFolderNameException(BadFolderNameException e){
+    log.info("Bad file type", e);
+    return new ResponseEntity<>(toRest(e, HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+  }
+
   private Exception toRest(ApiException e, HttpStatus status) {
     return new Exception(status.toString(), e.getMessage());
   }

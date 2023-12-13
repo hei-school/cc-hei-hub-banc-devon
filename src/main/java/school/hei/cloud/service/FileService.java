@@ -15,6 +15,6 @@ public class FileService {
   private final FileRepository repository;
   public UploadedFile uploadFile(String folderDestination, MultipartFile fileToUpload) {
     checkFileType(fileToUpload);
-    return repository.upload(fileToUpload);
+    return repository.upload(fileToUpload, folderDestination);
   }
 }
