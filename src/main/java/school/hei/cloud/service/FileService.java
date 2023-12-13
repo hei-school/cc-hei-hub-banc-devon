@@ -1,9 +1,7 @@
 package school.hei.cloud.service;
 
-import static school.hei.cloud.service.utils.FileTypeUtils.checkFileType;
-
+import java.util.List;
 import lombok.AllArgsConstructor;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,5 +27,9 @@ public class FileService {
     } else {
       return repository.download(fileName);
     }
+  }
+
+  public List<UploadedFile> searchFile(String fileName) {
+    return repository.searchFile(fileName);
   }
 }

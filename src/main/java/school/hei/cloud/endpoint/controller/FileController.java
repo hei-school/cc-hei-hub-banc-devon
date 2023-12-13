@@ -1,5 +1,6 @@
 package school.hei.cloud.endpoint.controller;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -35,5 +36,10 @@ public class FileController {
     HttpHeaders headers = new HttpHeaders();
     headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);
     return ResponseEntity.ok().headers(headers).body(file);
+  }
+
+  @GetMapping("/file")
+  public List<UploadedFile> searchFile(@RequestParam(name = "file_name") String fileName) {
+    return service.searchFile(fileName);
   }
 }

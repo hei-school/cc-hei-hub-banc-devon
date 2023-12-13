@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
@@ -90,6 +92,37 @@ public class FileRepositoryImpl implements FileRepository {
       }
     } catch (IOException e) {
       throw new RuntimeException("The file " + fileName + " is not found.");
+    }
+  }
+
+  private List<UploadedFile> searchFile(File directory, String toSearch,
+                                        List<UploadedFile> results) {
+    File[] files = directory.listFiles();
+    if (files != null) {
+      for (File file : files) {
+        if (file.isDirectory()) {
+          searchFile(file, toSearch, results);
+        } else if (file.getName().contains(toSearch)) {
+          results.add(UploadedFile.builder()
+              .filename(file.getName())
+              .folder(file.getParent())
+              .build());
+          log.info("Results: {}", results);
+        }
+      }
+    }
+    return results;
+  }
+
+  @Override
+  public List<UploadedFile> searchFile(String namePattern) {
+    File directory = new File(destinationFolderConf.getPath());
+    List<UploadedFile> actual = new ArrayList<>();
+    List<UploadedFile> results = searchFile(directory, namePattern, actual);
+    if (results.isEmpty()) {
+      throw new FileNotFoundException("File with name " + namePattern + " may not exists.");
+    } else {
+      return results;
     }
   }
 }
