@@ -16,6 +16,7 @@ for folder in UPLOAD_FOLDER.values():
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 MAX_FILE_SIZE_MEMORY = 21 * 1024 * 1024
 
+
 def global_search_by_filename(filename):
     for folder in UPLOAD_FOLDER.values():
         filepath = os.path.join(folder, filename)
@@ -25,7 +26,8 @@ def global_search_by_filename(filename):
 
 
 def allowed_file(filename, allowed_extensions):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
+    return '.' in filename \
+        and filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
 
 @app.route('/upload', methods=['POST'])
@@ -56,7 +58,8 @@ def upload_file():
         if not allowed_file(file.filename, allowed_extensions[file_type]):
             raise ValueError('File type is not supported.')
 
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'][file_type], file.filename)
+        filepath = \
+            os.path.join(app.config['UPLOAD_FOLDER'][file_type], file.filename)
 
         if os.path.exists(filepath):
             raise ValueError('Filename should be unique.')
@@ -91,6 +94,7 @@ def get_files_by_filename():
         if str(e) == "The specified file is not found":
             return jsonify({'error': str(e)}), 404
         return jsonify({'error': str(e)}), 400
+
 
 @app.route("/download", methods=['GET'])
 def download_file():
