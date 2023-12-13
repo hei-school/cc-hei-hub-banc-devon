@@ -13,6 +13,12 @@ paths:
         - Files
       summary: Upload a file to the cloud
       operationId: UploadFile
+      parameters:
+        - in: query
+          name: destinationFolder
+          schema:
+            type: string
+          required: true
       requestBody:
         content:
           multipart/form-date:
