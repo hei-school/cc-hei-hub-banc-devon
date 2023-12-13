@@ -26,6 +26,16 @@ specification [here](https://petstore.swagger.io/?url=https://raw.githubusercont
 
 We use Google formatter with Checkstyle.
 
+### Run code formatter:
+on LINUX:
+```bash
+./format.sh
+```
+on Windows:
+```bash
+./format.bat
+```
+nb: it might take much time, depending on your number of classes and amount of code to format
 ## FEATURES:  :rocket:
 
 1. **Upload Files:**  :open_file_folder:
