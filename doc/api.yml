@@ -21,7 +21,7 @@ paths:
           required: true
       requestBody:
         content:
-          multipart/form-date:
+          multipart/form-data:
             schema:
               type: array
               items:
@@ -43,6 +43,32 @@ paths:
           $ref: '#/components/responses/500'
         '507':
           $ref: '#/components/responses/507'
+
+    get:
+      tags:
+        - Files
+      summary: Get file by filename
+      operationId: getFileByFilename
+      parameters:
+        - in: query
+          name: filename
+          schema:
+            type: string
+          required:
+            true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  filepath:
+                    type: string
+                    description: path to the file searched
+        '404':
+          $ref: '#/components/responses/404'
 
 components:
   responses:
@@ -70,6 +96,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/InsufficientStorage'
+    404:
+      description: File not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/FileNotFoundException'
   schemas:
     ApiException:
       type: object
