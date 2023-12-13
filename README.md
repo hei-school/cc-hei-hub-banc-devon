@@ -1,16 +1,22 @@
-# _HEI CLOUD_
+# _HEI CLOUD_ :sparkles:
 
 This project allows users to upload, search and download files to the following directories:
 
 ```plaintext
 
-└───uploades
+└───upload
     ├───images
     ├───videos
-    ├───pdfs
+    ├───pdf
     ├───docs
     
 ```
+
+__NB__: Create the folder _upload_ and the subdirectories _images, videos, pdf, videos_ and then in _
+_application.properties__ files, reference the location of the _upload_ folder
+
+For example if I created the upload folder in /tmp/, I would reference:
+> folder.destination.path=/tmp/upload
 
 ### Specification  :page_with_curl:
 
@@ -22,7 +28,7 @@ specification [here](https://petstore.swagger.io/?url=https://raw.githubusercont
     ├───api.yml
 ```
 
-## LINTER: :sparkles:
+## LINTER :sparkles:
 
 We use Google formatter with Checkstyle.
 
@@ -36,7 +42,7 @@ on Windows:
 ./format.bat
 ```
 nb: it might take much time, depending on your number of classes and amount of code to format
-## FEATURES:  :rocket:
+## FEATURES :rocket:
 
 1. **Upload Files:**  :open_file_folder:
     - Upload files to a specific directory.
@@ -47,7 +53,7 @@ nb: it might take much time, depending on your number of classes and amount of c
 3. **Download File:**  :file_folder:
     - Download a specific file.
 
-### Error handling:  :exclamation:  :exclamation:
+### Error handling  :exclamation:  :exclamation:
 
 ```plaintext
      1. 'No file or type provided.': Raised if neither the file nor the type is provided in the request.
