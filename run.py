@@ -1,33 +1,15 @@
 from flask import Flask, request, jsonify, send_file
 import os
 
-app = Flask(__name__)
+from config import UPLOAD_FOLDER, MAX_FILE_SIZE_MEMORY, allowed_extensions
+from utils import allowed_file, global_search_by_filename
 
-UPLOAD_FOLDER = {
-    'images': 'uploads/images',
-    'videos': 'uploads/videos',
-    'pdfs': 'uploads/pdfs',
-    'docs': 'uploads/docs'
-}
+app = Flask(__name__)
 
 for folder in UPLOAD_FOLDER.values():
     os.makedirs(folder, exist_ok=True)
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-MAX_FILE_SIZE_MEMORY = 21 * 1024 * 1024
-
-
-def global_search_by_filename(filename):
-    for folder in UPLOAD_FOLDER.values():
-        filepath = os.path.join(folder, filename)
-        if os.path.exists(filepath):
-            return filepath
-    return None
-
-
-def allowed_file(filename, allowed_extensions):
-    return '.' in filename \
-        and filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
 
 @app.route('/upload', methods=['POST'])
@@ -44,13 +26,6 @@ def upload_file():
 
         if size > MAX_FILE_SIZE_MEMORY:
             raise ValueError('File too large')
-
-        allowed_extensions = {
-            'images': {'jpg', 'jpeg', 'png'},
-            'videos': {'mp4', 'avi', 'mov', 'mkv'},
-            'pdfs': {'pdf'},
-            'docs': {'docx'}
-        }
 
         if file.content_length > MAX_FILE_SIZE_MEMORY:
             raise ValueError('File too large')
