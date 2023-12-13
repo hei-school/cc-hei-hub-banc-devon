@@ -46,7 +46,7 @@ def upload_file():
             raise ValueError('Invalid file type, should be: images/videos/pdfs/docs.')
 
         if not allowed_file(file.filename, allowed_extensions[file_type]):
-            raise ValueError('Unsupported media type.')
+            raise ValueError('File type is not supported.')
 
         filepath = os.path.join(app.config['UPLOAD_FOLDER'][file_type], file.filename)
 
@@ -55,10 +55,10 @@ def upload_file():
 
         file.save(filepath)
 
-        return jsonify({'success': f'{file_type} uploaded.'}), 200
+        return jsonify({'filename': f'{file.filename}', 'folder':f'{filepath}'}), 200
 
     except ValueError as e:
-        if str(e) == "Unsupported media type.":
+        if str(e) == "File type is not supported.":
             return jsonify({'error': str(e)}), 415
         return jsonify({'error': str(e)}), 400
 
@@ -75,7 +75,7 @@ def get_files_by_filename():
         if filepath:
             return jsonify({'path': filepath}), 200
         else:
-            raise ValueError('File not found.')
+            raise ValueError('File not found')
 
     except ValueError as e:
         if str(e) == "File not found":
