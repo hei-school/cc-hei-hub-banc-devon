@@ -2,7 +2,7 @@ package school.hei.cloud.model.exception;
 
 import lombok.Getter;
 
-public class ApiException extends RuntimeException{
+public class ApiException extends RuntimeException {
   @Getter private final ExceptionType type;
 
   public ApiException(ExceptionType type, String message) {
@@ -16,6 +16,7 @@ public class ApiException extends RuntimeException{
   }
 
   public enum ExceptionType {
-    CLIENT_EXCEPTION, SERVER_EXCEPTION;
+    CLIENT_EXCEPTION,
+    SERVER_EXCEPTION;
   }
 }

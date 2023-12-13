@@ -51,7 +51,7 @@ paths:
       operationId: getFileByFilename
       parameters:
         - in: query
-          name: filename
+          name: file_name
           schema:
             type: string
           required:
@@ -67,6 +67,30 @@ paths:
                   filepath:
                     type: string
                     description: path to the file searched
+        '404':
+          $ref: '#/components/responses/404'
+
+  /download:
+    get:
+      tags:
+        - Files
+      summary: download a specific file
+      operationId: downloadFile
+      parameters:
+        - name: file_name
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/octet-stream:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/uploadedFile'
         '404':
           $ref: '#/components/responses/404'
 

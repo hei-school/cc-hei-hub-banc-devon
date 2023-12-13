@@ -10,7 +10,7 @@ import school.hei.cloud.model.exception.InvalidFileException;
 public class UploadFileValidator {
   public void accept(String folderName, MultipartFile file) {
     List<String> validFolderNames = List.of("images", "documents", "pdf", "videos");
-    if(!validFolderNames.contains(folderName)) {
+    if (!validFolderNames.contains(folderName)) {
       throw new BadFolderNameException("Bad folder name, only " + validFolderNames + " are valid.");
     } else {
       if (file.isEmpty()) {

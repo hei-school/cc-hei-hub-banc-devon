@@ -17,21 +17,24 @@ import school.hei.cloud.service.utils.DestinationFolderConf;
 public class FileRepositoryImpl implements FileRepository {
   private final DestinationFolderConf destinationFolderConf;
 
-  private static Path getDestinationSubFolder(MultipartFile file, String destinationFolder,
-                                              String subFolder) {
+  private static Path getDestinationSubFolder(
+      MultipartFile file, String destinationFolder, String subFolder) {
     if (file.getContentType().contains("video/") && subFolder.equals("videos")) {
       return Paths.get(destinationFolder + "/videos", file.getOriginalFilename());
     } else if (file.getContentType().contains("image/") && subFolder.equals("images")) {
       return Paths.get(destinationFolder + "/images", file.getOriginalFilename());
     } else if (file.getContentType().contains("application/pdf") && subFolder.equals("pdf")) {
       return Paths.get(destinationFolder + "/pdf", file.getOriginalFilename());
-    } else if ((file.getContentType().contains("application/vnd.openxmlformats-officedocument") ||
-        file.getContentType().contains("text/csv")) && subFolder.equals("documents")) {
+    } else if ((file.getContentType().contains("application/vnd.openxmlformats-officedocument")
+            || file.getContentType().contains("text/csv"))
+        && subFolder.equals("documents")) {
       return Paths.get(destinationFolder + "/documents", file.getOriginalFilename());
     } else {
       throw new BadFileTypeException(
-          "File with filename " + file.getOriginalFilename() + " has unsupported type " +
-              file.getContentType());
+          "File with filename "
+              + file.getOriginalFilename()
+              + " has unsupported type "
+              + file.getContentType());
     }
   }
 
