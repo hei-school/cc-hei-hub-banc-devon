@@ -24,9 +24,9 @@ public class FileController {
   @PostMapping(value = "/file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public UploadedFile uploadFile(
       @RequestParam(name = "folderDestination") String folderDestination,
-      @RequestBody MultipartFile toUpload) {
-    validator.accept(folderDestination, toUpload);
-    return service.uploadFile(folderDestination, toUpload);
+      @RequestBody MultipartFile file) {
+    validator.accept(folderDestination, file);
+    return service.uploadFile(folderDestination, file);
   }
 
   @GetMapping(value = "/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
