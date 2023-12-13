@@ -46,6 +46,12 @@ public class InternalToRestExceptionHandler {
     return new ResponseEntity<>(toRest(e, HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
   }
 
+  @ExceptionHandler(value = {FileNameInvalidException.class})
+  ResponseEntity<Exception> handleFileNameInvalidException(FileNameInvalidException e) {
+    log.info("Invalid file name");
+    return new ResponseEntity<>(toRest(e, HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+  }
+
   private Exception toRest(ApiException e, HttpStatus status) {
     return new Exception(status.toString(), e.getMessage());
   }
