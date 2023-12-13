@@ -62,11 +62,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  filepath:
-                    type: string
-                    description: path to the file searched
+                type: array
+                items:
+                  $ref: '#/components/schemas/uploadedFile'
         '404':
           $ref: '#/components/responses/404'
 
