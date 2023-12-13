@@ -15,6 +15,7 @@ for folder in UPLOAD_FOLDER.values():
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+MAX_FILE_SIZE_MEMORY = 21 * 1024 * 1024
 
 def global_search_by_filename(filename):
     for folder in UPLOAD_FOLDER.values():
@@ -35,12 +36,24 @@ def upload_file():
         file = request.files['filename']
         file_type = request.form['folder'].lower()
 
+        file.save(f'/tmp/{file.filename}')
+        size = os.stat(f'/tmp/{file.filename}').st_size
+
+        print(size)
+
+        if size > MAX_FILE_SIZE_MEMORY:
+            raise ValueError('File too large')
+
         allowed_extensions = {
             'images': {'jpg', 'jpeg', 'png'},
             'videos': {'mp4', 'avi', 'mov', 'mkv'},
             'pdfs': {'pdf'},
             'docs': {'docx'}
         }
+
+        print(file.content_length)
+        if file.content_length > MAX_FILE_SIZE_MEMORY:
+            raise ValueError('File too large')
 
         if file_type not in UPLOAD_FOLDER:
             raise ValueError('Invalid file type, should be: images/videos/pdfs/docs.')
@@ -60,8 +73,9 @@ def upload_file():
     except ValueError as e:
         if str(e) == "File type is not supported.":
             return jsonify({'error': str(e)}), 415
+        elif str(e) == "File too large":
+            return jsonify({'error': str(e)}), 413
         return jsonify({'error': str(e)}), 400
-
 
 @app.route('/files', methods=["GET"])
 def get_files_by_filename():
