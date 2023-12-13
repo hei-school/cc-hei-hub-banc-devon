@@ -1,11 +1,13 @@
-package service.utils;
+package school.hei.cloud.service.utils;
 
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import school.hei.cloud.model.exception.BadFileTypeException;
 
 @Component
+@Slf4j
 public class FileTypeUtils {
   public static void checkFileType(MultipartFile file) {
     String contentType = file.getContentType();

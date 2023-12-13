@@ -13,6 +13,5 @@ import org.springframework.web.multipart.MultipartFile;
 @ToString
 @Builder(toBuilder = true)
 public class UploadFile {
-  private String destinationFolder;
   private MultipartFile file;
 }

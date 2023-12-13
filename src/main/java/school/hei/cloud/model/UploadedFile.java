@@ -12,7 +12,6 @@ import lombok.ToString;
 @ToString
 @Builder(toBuilder = true)
 public class UploadedFile {
-  private String id;
   private String folder;
   private String filename;
 }
