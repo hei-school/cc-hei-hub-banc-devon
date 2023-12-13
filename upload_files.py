@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 import os
 
 app = Flask(__name__)
@@ -14,7 +14,6 @@ for folder in UPLOAD_FOLDER.values():
     os.makedirs(folder, exist_ok=True)
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
 MAX_FILE_SIZE_MEMORY = 21 * 1024 * 1024
 
 def global_search_by_filename(filename):
@@ -24,8 +23,10 @@ def global_search_by_filename(filename):
             return filepath
     return None
 
+
 def allowed_file(filename, allowed_extensions):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
+
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -39,8 +40,6 @@ def upload_file():
         file.save(f'/tmp/{file.filename}')
         size = os.stat(f'/tmp/{file.filename}').st_size
 
-        print(size)
-
         if size > MAX_FILE_SIZE_MEMORY:
             raise ValueError('File too large')
 
@@ -51,12 +50,8 @@ def upload_file():
             'docs': {'docx'}
         }
 
-        print(file.content_length)
         if file.content_length > MAX_FILE_SIZE_MEMORY:
             raise ValueError('File too large')
-
-        if file_type not in UPLOAD_FOLDER:
-            raise ValueError('Invalid file type, should be: images/videos/pdfs/docs.')
 
         if not allowed_file(file.filename, allowed_extensions[file_type]):
             raise ValueError('File type is not supported.')
@@ -68,7 +63,7 @@ def upload_file():
 
         file.save(filepath)
 
-        return jsonify({'filename': f'{file.filename}', 'folder':f'{filepath}'}), 200
+        return jsonify({'filename': file.filename, 'folder': filepath}), 200
 
     except ValueError as e:
         if str(e) == "File type is not supported.":
@@ -76,6 +71,7 @@ def upload_file():
         elif str(e) == "File too large":
             return jsonify({'error': str(e)}), 413
         return jsonify({'error': str(e)}), 400
+
 
 @app.route('/files', methods=["GET"])
 def get_files_by_filename():
@@ -89,12 +85,34 @@ def get_files_by_filename():
         if filepath:
             return jsonify({'path': filepath}), 200
         else:
-            raise ValueError('File not found')
+            raise ValueError('The specified file is not found')
 
     except ValueError as e:
-        if str(e) == "File not found":
+        if str(e) == "The specified file is not found":
             return jsonify({'error': str(e)}), 404
         return jsonify({'error': str(e)}), 400
+
+@app.route("/download", methods=['GET'])
+def download_file():
+    try:
+        if 'filename' not in request.args:
+            raise ValueError('No filename provided.')
+
+        full_filename = request.args['filename']
+        _, filename = os.path.split(full_filename)
+
+        filepath = global_search_by_filename(filename)
+
+        if not filepath or not os.path.exists(filepath):
+            raise ValueError('The specified file is not found')
+
+        return send_file(filepath, as_attachment=True)
+
+    except ValueError as e:
+        if str(e) == "The specified file is not found":
+            return jsonify({'error': str(e)}), 404
+        return jsonify({'error': str(e)}), 400
+
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=5000)
