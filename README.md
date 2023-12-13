@@ -12,31 +12,32 @@ This project allows users to upload, search and download files to the following 
     
 ```
 
-### Specification
-You can find openapi specification here:
+### Specification  :page_with_curl:
+
+You can find the OpenApi
+specification [here](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/hei-school/cc-hei-hub-banc-devon/feature/java/doc/api.yml)
 
 ```tree
 └───doc
     ├───api.yml
 ```
 
-To have a preview, you can use extension or open it in [swagger_editor](https://editor.swagger.io/)
+## LINTER: :sparkles:
 
-## LINTER:
-We use google formatter for code style
+We use Google formatter with Checkstyle.
 
-## FEATURES:
+## FEATURES:  :rocket:
 
-1. **Upload Files:**
+1. **Upload Files:**  :open_file_folder:
     - Upload files to a specific directory.
 
-2. **Search Files:**
+2. **Search Files:**  :mag_right:
     - Search for a file by filename across all directories.
 
-3. **Download File:**
+3. **Download File:**  :file_folder:
     - Download a specific file.
 
-### Error handling:
+### Error handling:  :exclamation:  :exclamation:
 
 ```plaintext
      1. 'No file or type provided.': Raised if neither the file nor the type is provided in the request.
