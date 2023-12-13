@@ -2,8 +2,13 @@ package school.hei.cloud.service;
 
 import static school.hei.cloud.service.utils.FileTypeUtils.checkFileType;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import lombok.AllArgsConstructor;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import school.hei.cloud.model.UploadedFile;
@@ -21,13 +26,14 @@ public class FileService {
     return repository.upload(fileToUpload, folderDestination);
   }
 
-  public FileSystemResource downloadFile(String fileName) {
+  public Resource downloadFile(String fileName) {
     if (fileName.isEmpty()) {
       throw new FileNameInvalidException("The filename you provided is invalid");
     } else {
       try {
-        return new FileSystemResource(fileName);
-      } catch (FileNotFoundException e) {
+        File file = new File(fileName);
+        return new ByteArrayResource(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
+      } catch (FileNotFoundException | IOException e) {
         throw new RuntimeException(e);
       }
     }

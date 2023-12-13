@@ -1,8 +1,10 @@
 package school.hei.cloud.endpoint.controller;
 
 import lombok.AllArgsConstructor;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +30,10 @@ public class FileController {
   }
 
   @GetMapping(value = "/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-  public FileSystemResource downloadFile(@RequestParam("file_name") String fileName) {
-    return service.downloadFile(fileName);
+  public ResponseEntity<Resource> downloadFile(@RequestParam("file_name") String fileName) {
+    Resource file = service.downloadFile(fileName);
+    HttpHeaders headers = new HttpHeaders();
+    headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);
+    return ResponseEntity.ok().headers(headers).body(file);
   }
 }
