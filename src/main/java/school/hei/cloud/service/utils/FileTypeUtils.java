@@ -28,7 +28,8 @@ public class FileTypeUtils {
           "File with filename "
               + file.getOriginalFilename()
               + " has unsupported type "
-              + contentType);
+              + contentType
+              + ". Check the folderDestination either the file to upload.");
     }
   }
 }

@@ -28,18 +28,6 @@ public class InternalToRestExceptionHandler {
     return new ResponseEntity<>(toRest(e, HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
   }
 
-  @ExceptionHandler(value = {FileNotFoundException.class})
-  ResponseEntity<Exception> handleFileNotFoundException(FileNotFoundException e) {
-    log.info("Bad file request", e);
-    return new ResponseEntity<>(toRest(e, HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
-  }
-
-  @ExceptionHandler(value = {FileNameInvalidException.class})
-  ResponseEntity<Exception> handleFileInvalidNameException(FileNameInvalidException e) {
-    log.info("Bad filename", e);
-    return new ResponseEntity<>(toRest(e, HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
-  }
-
   @ExceptionHandler(value = {BadFolderNameException.class})
   ResponseEntity<Exception> BadFolderNameException(BadFolderNameException e) {
     log.info("Bad file type", e);
@@ -50,6 +38,19 @@ public class InternalToRestExceptionHandler {
   ResponseEntity<Exception> handleFileNameInvalidException(FileNameInvalidException e) {
     log.info("Invalid file name");
     return new ResponseEntity<>(toRest(e, HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(value = {FileNotFoundException.class})
+  ResponseEntity<Exception> handleFileNotFoundException(FileNotFoundException e) {
+    log.info("File not found");
+    return new ResponseEntity<>(toRest(e, HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(value = {RuntimeException.class})
+  ResponseEntity<Exception> handleRuntimeException(RuntimeException e) {
+    log.info("Runtime exception");
+    return new ResponseEntity<>(toRest((ApiException) e, HttpStatus.INTERNAL_SERVER_ERROR),
+        HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
   private Exception toRest(ApiException e, HttpStatus status) {

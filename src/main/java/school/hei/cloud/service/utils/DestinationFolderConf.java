@@ -6,7 +6,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DestinationFolderConf {
-  @Getter private String path;
+  @Getter
+  private final String path;
 
   public DestinationFolderConf(@Value("${folder.destination.path}") String path) {
     this.path = path;
